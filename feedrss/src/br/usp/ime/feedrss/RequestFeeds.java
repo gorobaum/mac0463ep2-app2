@@ -1,69 +1,79 @@
 package br.usp.ime.feedrss;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.os.AsyncTask;
 
-public class RequestFeeds extends AsyncTask<String, Void, List<JSONArray>> {
-	
-	@Override
-	protected List<JSONArray> doInBackground(String... urls) {
+public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
+
+	protected List<Feed> doInBackground(String... urls) {
 		try {
-			List<JSONArray> todosFeeds = new ArrayList<JSONArray>();
-			for (int i = 0; i < urls.length; i++) {
-				todosFeeds.add(getJson(urls[i]));
-			}
-			return todosFeeds;
+			return getFeeds(urls);
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
+		return null;
 	}
 
-	private JSONArray getJson(String url) {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(url);
-		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
+	private List<Feed> getFeeds(String[] urls) {
+		for (int i = 0; i < urls.length; i++) {
+			try {
+				URL url = new URL(urls[i]);
+				XmlPullParserFactory factory = XmlPullParserFactory
+						.newInstance();
+				factory.setNamespaceAware(false);
+				XmlPullParser parser = factory.newPullParser();
+				parser.setInput(url.openStream(), "UTF_8");
+				List<Feed> feeds = carregaFeedsNoBanco(parser);
+				return feeds;
+			} catch (XmlPullParserException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
-		JSONArray jsonArray = null;
-		try {
-			jsonArray = new JSONArray(builder.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
+		return null;
+	}
+	
+	private List<Feed> carregaFeedsNoBanco(XmlPullParser parser)
+			throws XmlPullParserException, IOException {
+		int eventType = parser.getEventType();
+		List<Feed> feeds = new ArrayList<Feed>();
+		while (eventType != XmlPullParser.END_DOCUMENT) {
+			if (eventType == XmlPullParser.START_TAG
+					&& parser.getName().equalsIgnoreCase("item")) {
+				processaItem(parser);
+			}
+			eventType = parser.next();
 		}
-		return jsonArray;
+		return feeds;
+	}
+
+	public Feed processaItem(XmlPullParser parser)
+			throws XmlPullParserException, IOException {
+		int eventType = parser.next();
+		Feed feed = new Feed();
+		while (!(eventType == XmlPullParser.END_TAG && parser.getName().equals("item"))) {
+			if (eventType == XmlPullParser.START_TAG) {
+				if (parser.getName().equalsIgnoreCase("title")) {
+					feed.setTitulo(parser.nextText());
+				} else if (parser.getName().equalsIgnoreCase("link")) {
+					feed.setLink(parser.nextText());
+				} else if (parser.getName().equalsIgnoreCase("description")) {
+					feed.setDescricao(parser.nextText());
+				} else if (parser.getName().equalsIgnoreCase("category")) {
+					feed.setCategoria(parser.nextText());
+				}
+			}
+			eventType = parser.next();
+		}
+		return feed;
 	}
 }

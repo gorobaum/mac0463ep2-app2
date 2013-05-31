@@ -6,13 +6,6 @@ public class Feed {
 	private String descricao;
 	private String categoria;
 	
-	public Feed(String titulo, String link, String descricao, String categoria) {
-		this.titulo = titulo;
-		this.link = link;
-		this.descricao = descricao;
-		this.categoria = categoria;
-	}
-	
 	public String getTitulo() {
 		return titulo;
 	}
