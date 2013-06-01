@@ -1,10 +1,12 @@
 package br.usp.ime.feedrss;
 
+
 public class Feed {
 	private String titulo;
 	private String link;
 	private String descricao;
 	private String categoria;
+	private String data;
 
 	public String getTitulo() {
 		return titulo;
@@ -36,6 +38,14 @@ public class Feed {
 
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
 }

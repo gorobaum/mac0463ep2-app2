@@ -14,10 +14,11 @@ import android.util.Log;
 public class DBAdapter {
 
 	public static final String ID = "_id";
-	private static final String TITULO = "titulo";
-	private static final String LINK = "link";
-	private static final String DESCRICAO = "descricao";
-	private static final String CATEGORIA = "categoria";
+	public static final String TITULO = "titulo";
+	public static final String LINK = "link";
+	public static final String DESCRICAO = "descricao";
+	public static final String CATEGORIA = "categoria";
+	public static final String DATA = "data";
 	private static final String TAG = "DBAdapter";
 
 	private static final String DATABASE_NAME = "ep2";
@@ -25,9 +26,10 @@ public class DBAdapter {
 	private static final int DATABASE_VERSION = 1;
 
 	private static final String DATABASE_CREATE = "CREATE TABLE "
-			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TITULO
-			+ " TEXT NOT NULL, " + LINK + " TEXT NOT NULL, " + DESCRICAO
-			+ " TEXT NOT NULL, " + CATEGORIA + " TEXT NOT NULL);";
+			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ TITULO + " TEXT NOT NULL, " + LINK + " TEXT NOT NULL, "
+			+ DESCRICAO + " TEXT NOT NULL, " + CATEGORIA + " TEXT NOT NULL, "
+			+ DATA + " TEXT NOT NULL);";
 
 	private final Context context;
 
@@ -67,7 +69,7 @@ public class DBAdapter {
 		DBHelper.close();
 	}
 
-	public List<Long> insertAllFeeds(List<Feed> feeds) {
+	public List<Long> insertNewFeeds(List<Feed> feeds) {
 		List<Long> ids = new ArrayList<Long>();
 		for (Feed feed : feeds) {
 			ids.add(insertFeed(feed));
@@ -81,21 +83,30 @@ public class DBAdapter {
 		initialValues.put(LINK, feed.getLink());
 		initialValues.put(DESCRICAO, feed.getDescricao());
 		initialValues.put(CATEGORIA, feed.getCategoria());
+		initialValues.put(DATA, feed.getData());
 		return db.insert(DATABASE_TABLE, null, initialValues);
 	}
 
-	public boolean deleteTitle(long rowId) {
+	public boolean deleteFeed(long rowId) {
 		return db.delete(DATABASE_TABLE, ID + "=" + rowId, null) > 0;
 	}
 
+	public boolean deleteAllFeeds() {
+		return db.delete(DATABASE_TABLE, null, null) > 0;
+	}
+
 	public Cursor getAllFeeds() {
-		return db.query(DATABASE_TABLE, new String[] { ID, TITULO, LINK,
-				DESCRICAO, CATEGORIA }, null, null, null, null, null);
+		Cursor cursor = db.query(DATABASE_TABLE, new String[] { ID, TITULO,
+				LINK, DESCRICAO, CATEGORIA, DATA }, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+		return cursor;
 	}
 
 	public Cursor getFeed(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] { ID,
-				TITULO, LINK, DESCRICAO, CATEGORIA }, ID + "=" + rowId, null,
+				TITULO, LINK, DESCRICAO, CATEGORIA, DATA }, ID + "=" + rowId, null,
 				null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
@@ -105,7 +116,7 @@ public class DBAdapter {
 
 	public Cursor getFeedPorTitulo(String titulo) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] { ID,
-				TITULO, LINK, DESCRICAO, CATEGORIA }, TITULO + "LIKE"
+				TITULO, LINK, DESCRICAO, CATEGORIA, DATA }, TITULO + "LIKE"
 				+ "%titulo", null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
@@ -113,12 +124,13 @@ public class DBAdapter {
 		return mCursor;
 	}
 
-	public boolean updateTitle(long rowId, Feed feed) {
+	public boolean updateFeed(long rowId, Feed feed) {
 		ContentValues args = new ContentValues();
 		args.put(TITULO, feed.getTitulo());
 		args.put(LINK, feed.getLink());
 		args.put(DESCRICAO, feed.getDescricao());
 		args.put(CATEGORIA, feed.getCategoria());
+		args.put(DATA, feed.getData());
 		return db.update(DATABASE_TABLE, args, ID + "=" + rowId, null) > 0;
 	}
 }
