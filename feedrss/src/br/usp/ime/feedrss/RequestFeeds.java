@@ -41,7 +41,7 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 		}
 		return null;
 	}
-	
+
 	private List<Feed> carregaFeedsNoBanco(XmlPullParser parser)
 			throws XmlPullParserException, IOException {
 		int eventType = parser.getEventType();
@@ -49,7 +49,7 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.START_TAG
 					&& parser.getName().equalsIgnoreCase("item")) {
-				processaItem(parser);
+				feeds.add(processaItem(parser));
 			}
 			eventType = parser.next();
 		}
@@ -60,7 +60,8 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 			throws XmlPullParserException, IOException {
 		int eventType = parser.next();
 		Feed feed = new Feed();
-		while (!(eventType == XmlPullParser.END_TAG && parser.getName().equals("item"))) {
+		while (!(eventType == XmlPullParser.END_TAG && parser.getName().equals(
+				"item"))) {
 			if (eventType == XmlPullParser.START_TAG) {
 				if (parser.getName().equalsIgnoreCase("title")) {
 					feed.setTitulo(parser.nextText());

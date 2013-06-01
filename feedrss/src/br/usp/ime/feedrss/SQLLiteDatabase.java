@@ -16,8 +16,9 @@ public class SQLLiteDatabase extends SQLiteOpenHelper {
 	private static final String DESCRICAO = "descricao";
 	private static final String CATEGORIA = "categoria";
 	private static final String DICTIONARY_TABLE_CREATE = "CREATE TABLE "
-			+ TABLE_NAME + " (" + TITULO + " TEXT, " + LINK + " TEXT"
-			+ DESCRICAO + "TEXT" + CATEGORIA + "categoria);";
+			+ TABLE_NAME + " (_id INTEGER PRIMERY KEY AUTOINCREMENT, " + TITULO
+			+ " TEXT NOT NULL, " + LINK + " TEXT NOT NULL" + DESCRICAO
+			+ "TEXT NOT NULL, " + CATEGORIA + "categoria TEXT NOT NULL);";
 
 	public SQLLiteDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,7 +39,7 @@ public class SQLLiteDatabase extends SQLiteOpenHelper {
 			saveFeed(feed);
 		}
 	}
-	
+
 	public void saveFeed(Feed feed) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.beginTransaction();

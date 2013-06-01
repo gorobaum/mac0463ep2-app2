@@ -18,7 +18,8 @@ public class MainActivity extends Activity {
 				.execute("http://www.ime.usp.br/index.php?option=com_eventlist&view=categoryevents&format=feed&id=62&type=rss");
 		try {
 			List<Feed> feeds = requestFeeds.get();
-			salvarFeedsNoBanco(feeds);
+			DBAdapter adapter = new DBAdapter(getApplicationContext());
+			salvarFeedsNoBanco(feeds, adapter);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
@@ -26,18 +27,16 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void salvarFeedsNoBanco(List<Feed> feeds) {
-		SQLLiteDatabase database = new SQLLiteDatabase(getApplicationContext());
-		database.saveAllFeeds(feeds);
-		
+	private void salvarFeedsNoBanco(List<Feed> feeds, DBAdapter adapter) {
+		adapter.open(); 
+		adapter.insertAllFeeds(feeds);
+		adapter.close();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 
 }
