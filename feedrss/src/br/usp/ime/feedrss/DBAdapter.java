@@ -25,9 +25,9 @@ public class DBAdapter {
 	private static final int DATABASE_VERSION = 1;
 
 	private static final String DATABASE_CREATE = "CREATE TABLE "
-			+ DATABASE_TABLE + " (_id INTEGER PRIMERY KEY AUTOINCREMENT, "
-			+ TITULO + " TEXT NOT NULL, " + LINK + " TEXT NOT NULL" + DESCRICAO
-			+ "TEXT NOT NULL, " + CATEGORIA + "categoria TEXT NOT NULL);";
+			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TITULO
+			+ " TEXT NOT NULL, " + LINK + " TEXT NOT NULL, " + DESCRICAO
+			+ " TEXT NOT NULL, " + CATEGORIA + " TEXT NOT NULL);";
 
 	private final Context context;
 
@@ -38,6 +38,7 @@ public class DBAdapter {
 		this.context = ctx;
 		DBHelper = new DatabaseHelper(context);
 	}
+
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
