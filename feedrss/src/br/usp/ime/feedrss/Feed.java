@@ -5,7 +5,7 @@ public class Feed {
 	private String titulo;
 	private String descricao;
 	private String categoria;
-	private String data;
+	private long data;
 
 	public String getTitulo() {
 		return titulo;
@@ -31,11 +31,11 @@ public class Feed {
 		this.categoria = categoria;
 	}
 
-	public String getData() {
+	public long getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(long data) {
 		this.data = data;
 	}
 

@@ -119,12 +119,10 @@ public class MainActivity extends Activity {
 				Intent myIntent = new Intent(view.getContext(),
 						DescricaoActivity.class);
 				Feed feed = feeds.get(position);
-				String titulo = feed.getTitulo();
-				String descricao = feed.getDescricao();
-				String categoria = feed.getCategoria();
-				myIntent.putExtra("TITULO", titulo);
-				myIntent.putExtra("DESCRICAO", descricao);
-				myIntent.putExtra("CATEGORIA", categoria);
+				myIntent.putExtra("TITULO", feed.getTitulo());
+				myIntent.putExtra("DESCRICAO", feed.getDescricao());
+				myIntent.putExtra("CATEGORIA", feed.getCategoria());
+				myIntent.putExtra("DATA", feed.getData());
 				startActivityForResult(myIntent, 0);
 			}
 		});
@@ -141,5 +139,4 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
 }

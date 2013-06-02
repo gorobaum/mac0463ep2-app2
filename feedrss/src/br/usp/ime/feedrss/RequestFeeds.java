@@ -3,6 +3,7 @@ package br.usp.ime.feedrss;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -66,7 +67,9 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 				if (parser.getName().equalsIgnoreCase("title")) {
 					feed.setTitulo(parser.nextText());
 				} else if (parser.getName().equalsIgnoreCase("description")) {
-					feed.setDescricao(parser.nextText());
+					String descricao = parser.nextText();
+					feed.setDescricao(descricao);
+					feed.setData(pegaDataDaDescricao(descricao));
 				} else if (parser.getName().equalsIgnoreCase("category")) {
 					feed.setCategoria(parser.nextText());
 				}
@@ -74,5 +77,27 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 			eventType = parser.next();
 		}
 		return feed;
+	}
+
+	private long pegaDataDaDescricao(String descricao) {
+		Calendar c = Calendar.getInstance();
+		String[] lines = descricao.split("<br\\s*/>");
+		for (String string : lines) {
+			if (string.contains("Data: ")) {
+				String[] tempo = string.subSequence(6, 16).toString()
+						.split("\\.");
+				c.set(Calendar.DAY_OF_MONTH, Integer.valueOf(tempo[0]));
+				c.set(Calendar.MONTH, Integer.valueOf(tempo[1]) - 1);
+				c.set(Calendar.YEAR, Integer.valueOf(tempo[2]));
+			}
+			if (string.contains("Hora: ")) {
+				String[] tempo = string.subSequence(6, 11).toString()
+						.split("\\.");
+				c.set(Calendar.HOUR_OF_DAY, Integer.valueOf(tempo[0]));
+				c.set(Calendar.MINUTE, Integer.valueOf(tempo[1]));
+				c.set(Calendar.SECOND, 0);
+			}
+		}
+		return c.getTime().getTime();
 	}
 }

@@ -1,6 +1,7 @@
 package br.usp.ime.feedrss;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
@@ -14,16 +15,19 @@ public class DescricaoActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.descricaolayout);
 
-		TextView titulo = (TextView) findViewById(R.id.titulo);
+		TextView txtTitulo = (TextView) findViewById(R.id.titulo);
 		WebView descricao = (WebView) findViewById(R.id.descricao);
 		TextView categoria = (TextView) findViewById(R.id.categoria);
 
 		Bundle bundle = this.getIntent().getExtras();
 
-		titulo.setText(bundle.getString("TITULO"));
+		txtTitulo.setText(bundle.getString("TITULO"));
 		descricao.loadData(bundle.getString("DESCRICAO"),
 				"text/html; charset=UTF-8", null);
 		categoria.setText(bundle.getString("CATEGORIA"));
+
+		final long data = bundle.getLong("DATA");
+		final String titulo = bundle.getString("TITULO");
 
 		Button voltar = (Button) findViewById(R.id.voltar);
 
@@ -42,7 +46,13 @@ public class DescricaoActivity extends Activity {
 
 			@Override
 			public void onClick(View view) {
-				finish();
+				Intent intent = new Intent(Intent.ACTION_EDIT);
+				intent.setType("vnd.android.cursor.item/event");
+				intent.putExtra("beginTime", data);
+				intent.putExtra("allDay", false);
+				intent.putExtra("endTime", data + 2 * 60 * 60 * 1000);
+				intent.putExtra("title", titulo);
+				startActivity(intent);
 			}
 
 		});

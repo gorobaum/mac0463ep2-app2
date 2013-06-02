@@ -27,7 +27,7 @@ public class DBAdapter {
 	private static final String DATABASE_CREATE = "CREATE TABLE "
 			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ TITULO + " TEXT NOT NULL, " + DESCRICAO + " TEXT NOT NULL, "
-			+ CATEGORIA + " TEXT NOT NULL, " + DATA + " TEXT);";
+			+ CATEGORIA + " TEXT NOT NULL, " + DATA + " INTEGER);";
 
 	private final Context context;
 
