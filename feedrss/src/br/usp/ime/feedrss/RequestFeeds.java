@@ -65,8 +65,6 @@ public class RequestFeeds extends AsyncTask<String, Void, List<Feed>> {
 			if (eventType == XmlPullParser.START_TAG) {
 				if (parser.getName().equalsIgnoreCase("title")) {
 					feed.setTitulo(parser.nextText());
-				} else if (parser.getName().equalsIgnoreCase("link")) {
-					feed.setLink(parser.nextText());
 				} else if (parser.getName().equalsIgnoreCase("description")) {
 					feed.setDescricao(parser.nextText());
 				} else if (parser.getName().equalsIgnoreCase("category")) {

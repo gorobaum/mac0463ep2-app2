@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -51,16 +48,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> listView, View view,
 					int position, long id) {
-				Cursor cursor = (Cursor) listView.getItemAtPosition(position);
-				String url = cursor.getString(cursor
-						.getColumnIndexOrThrow(DBAdapter.LINK));
-				if (!url.startsWith("http://") && !url.startsWith("https://"))
-					   url = "http://" + url;
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				startActivity(browserIntent);
-				Toast.makeText(getApplicationContext(), url,
-						Toast.LENGTH_SHORT).show();
-
+				// TODO: Abrir descrição do role.
 			}
 		});
 	}

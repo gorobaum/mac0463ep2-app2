@@ -15,7 +15,6 @@ public class DBAdapter {
 
 	public static final String ID = "_id";
 	public static final String TITULO = "titulo";
-	public static final String LINK = "link";
 	public static final String DESCRICAO = "descricao";
 	public static final String CATEGORIA = "categoria";
 	public static final String DATA = "data";
@@ -27,9 +26,8 @@ public class DBAdapter {
 
 	private static final String DATABASE_CREATE = "CREATE TABLE "
 			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-			+ TITULO + " TEXT NOT NULL, " + LINK + " TEXT NOT NULL, "
-			+ DESCRICAO + " TEXT NOT NULL, " + CATEGORIA + " TEXT NOT NULL, "
-			+ DATA + " TEXT NOT NULL);";
+			+ TITULO + " TEXT NOT NULL, " + DESCRICAO + " TEXT NOT NULL, "
+			+ CATEGORIA + " TEXT NOT NULL, " + DATA + " TEXT NOT NULL);";
 
 	private final Context context;
 
@@ -80,7 +78,6 @@ public class DBAdapter {
 	public long insertFeed(Feed feed) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(TITULO, feed.getTitulo());
-		initialValues.put(LINK, feed.getLink());
 		initialValues.put(DESCRICAO, feed.getDescricao());
 		initialValues.put(CATEGORIA, feed.getCategoria());
 		initialValues.put(DATA, feed.getData());
@@ -97,7 +94,8 @@ public class DBAdapter {
 
 	public Cursor getAllFeeds() {
 		Cursor cursor = db.query(DATABASE_TABLE, new String[] { ID, TITULO,
-				LINK, DESCRICAO, CATEGORIA, DATA }, null, null, null, null, null);
+				DESCRICAO, CATEGORIA, DATA }, null, null, null, null,
+				null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -106,8 +104,8 @@ public class DBAdapter {
 
 	public Cursor getFeed(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] { ID,
-				TITULO, LINK, DESCRICAO, CATEGORIA, DATA }, ID + "=" + rowId, null,
-				null, null, null, null);
+				TITULO, DESCRICAO, CATEGORIA, DATA }, ID + "=" + rowId,
+				null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -116,7 +114,7 @@ public class DBAdapter {
 
 	public Cursor getFeedPorTitulo(String titulo) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] { ID,
-				TITULO, LINK, DESCRICAO, CATEGORIA, DATA }, TITULO + "LIKE"
+				TITULO, DESCRICAO, CATEGORIA, DATA }, TITULO + "LIKE"
 				+ "%titulo", null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
@@ -127,7 +125,6 @@ public class DBAdapter {
 	public boolean updateFeed(long rowId, Feed feed) {
 		ContentValues args = new ContentValues();
 		args.put(TITULO, feed.getTitulo());
-		args.put(LINK, feed.getLink());
 		args.put(DESCRICAO, feed.getDescricao());
 		args.put(CATEGORIA, feed.getCategoria());
 		args.put(DATA, feed.getData());
