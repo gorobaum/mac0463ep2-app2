@@ -27,7 +27,7 @@ public class DBAdapter {
 	private static final String DATABASE_CREATE = "CREATE TABLE "
 			+ DATABASE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ TITULO + " TEXT NOT NULL, " + DESCRICAO + " TEXT NOT NULL, "
-			+ CATEGORIA + " TEXT NOT NULL, " + DATA + " TEXT NOT NULL);";
+			+ CATEGORIA + " TEXT NOT NULL, " + DATA + " TEXT);";
 
 	private final Context context;
 
@@ -129,5 +129,10 @@ public class DBAdapter {
 		args.put(CATEGORIA, feed.getCategoria());
 		args.put(DATA, feed.getData());
 		return db.update(DATABASE_TABLE, args, ID + "=" + rowId, null) > 0;
+	}
+	
+	public boolean isEmpty() {
+		Cursor cursor = getAllFeeds();
+		return !cursor.moveToFirst();
 	}
 }

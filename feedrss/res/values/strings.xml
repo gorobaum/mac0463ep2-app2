@@ -9,4 +9,6 @@
 
 </string>
     <string name="titulo">Titulo: </string>
+    <string name="voltar">Voltar</string>
+    <string name="calendario">Adicionar no Calendario</string>
 </resources>
